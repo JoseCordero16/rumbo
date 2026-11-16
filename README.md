@@ -20,22 +20,6 @@ Para demostrar que escala: `npm run db:stress` agrega **2,000 candidatos, 3,000 
 
 **Cuentas demo:** `admin@rumbo.com` = administrador · `empresa@demo.com` = empresa (Tigo) · `ana@correo.com`, `carlos@correo.com`, `lucia@correo.com` = candidatos.
 
-## Requisitos de la evaluación → dónde están
-| Requisito | Pantalla / ruta | Código principal |
-|---|---|---|
-| Landing page | `#/` | `Vistas.home` |
-| Crear usuario | `#/acceso` (pestaña *Soy candidato*) | `Formularios.registro` → `POST /api/registro` |
-| Crear empresa | `#/acceso` (pestaña *Soy empresa*; el admin la aprueba) | `Formularios.registroEmpresa` → `POST /api/registro-empresa` |
-| Empresa crea oferta | `#/publicar` | `Formularios.publicar` → `POST /api/empleos` |
-| Usuario busca empleos y ve detalle | `#/empleos` y `#/empleo/ID` | `Vistas.empleos`, `Vistas.empleo` |
-| Usuario aplica a empleo | botón *Postularme ahora* | `Acciones.postular` → `POST /api/postulaciones` |
-| Empresa ve aplicantes | `#/candidatos` y `#/candidato/ID` | `Vistas.candidatos`, `Vistas.candidato` |
-| Empresa acepta o deniega | botones *Aceptar / Denegar* | `Acciones.estado` → `PATCH /api/postulaciones/:id` (status 3 o 4) |
-| Empresa inactiva o elimina ofertas | `#/publicar` (tabla *Mis vacantes*) | `Acciones.pausar`, `Acciones.borrarEmpleo` |
-| Dashboard de empresas | `#/panel` | `Vistas.panel` |
-| Dashboard de usuarios | `#/tablero` | `Vistas.tablero` |
-| Panel administrativo | `#/admin`, `#/usuarios`, `#/empresas`, `#/vacantes`, `#/moderacion` | `Vistas.admin` y siguientes |
-
 ## ¿Y si en vez de 30 datos hubiera 3,000 (o 300,000)?
 El navegador **nunca recibe todos los registros**. Lo que hace el sistema:
 | Problema | Solución implementada |
@@ -72,12 +56,6 @@ Barra superior y pie de página en todas las pantallas · el logo vuelve al inic
 | `public/js/vistas.js` | El HTML de cada pantalla. |
 | `public/js/app.js` | Router, formularios y botones (cada uno llama al servidor). |
 
-## Cómo funciona (explicación para la exposición)
-**Navegador (public/)**
-1. *Una sola página (SPA):* `index.html` solo tiene `<div id="app">`; JavaScript pinta cada pantalla.
-2. *Router por hash:* `#/empleo/3` → ruta `empleo`, parámetro `3`; `render()` llama a `Vistas.empleo(3)`.
-3. En cada `render()`, `db.cargar()` pide `GET /api/datos` y guarda la respuesta; las vistas solo **leen** esa copia.
-4. Los `<form data-form="x">` se validan con Bootstrap y llaman a `Formularios.x(datos)`; los `data-act="x"` llaman a `Acciones.x()`. Ambos usan `http()` para mandar la petición. Si el servidor responde error, se muestra con `aviso()`.
 
 **Servidor (server/server.js)**
 1. `ruta(método, url, roles, función)` registra cada endpoint y comprueba que el usuario tenga el rol permitido (403 si no).
@@ -89,41 +67,3 @@ Barra superior y pie de página en todas las pantallas · el logo vuelve al inic
 
 **Endpoints principales:** `POST /login, /registro, /registro-empresa, /logout` · `GET /datos` · `POST /empleos, /postulaciones, /valoraciones, /alertas, /palabras` · `PATCH /perfil, /empresa, /empleos/:id, /postulaciones/:id, /empresas/:id, /usuarios/:id` · `DELETE /empleos/:id, /palabras/:id, /bloqueados/:id`.
 
-## "Cámbiame esto" — dónde tocar
-| Si te piden… | Haz esto |
-|---|---|
-| Cambiar el color principal | `public/css/styles.css`: `--acento` y `.btn-primary`. |
-| Agregar una ciudad | `public/js/vistas.js`: arreglo `CIUDADES`. |
-| Cambiar las etapas de postulación | `vistas.js`: `ETAPAS` (la posición es el número guardado en `applications.status`); en `schema.sql` el `CHECK (status BETWEEN 0 AND 4)`; en `server.js` la lista `[0,1,2,3,4]` de validación. |
-| Agregar una palabra restringida | Panel admin → Moderación (o `INSERT INTO words` en `seed.js`). |
-| Agregar un campo a un formulario | 1) columna nueva en `schema.sql` (y `npm run db:init`); 2) `campo(...)` en `vistas.js`; 3) incluirlo en el `INSERT/UPDATE` del endpoint en `server.js`. |
-| Cambiar cuántos resultados salen por página | `server.js`, `paginar()`: `tam` por defecto (`|| 8`). |
-| Cambiar cuántos empleos salen en inicio | `vistas.js`, `home`: `slice(0, 3)`. |
-| Cambiar cuántos empleos trae la API | `public/js/api.js`: `limit=6`. |
-| Cambiar los salarios del filtro | `vistas.js`: arreglo `[0, 800, 1000, 1500]`. |
-| Agregar una pantalla nueva | función en `Vistas` + enlace `#/nombre` + (si es privada) agregarla a `ACCESO` en `app.js`. |
-| Un nuevo permiso/endpoint | `server.js`: `ruta('post', '/algo', ['admin'], async (req, u) => {...})`. |
-| Cambiar el puerto | `.env`: `PORT`. |
-
-## Preguntas probables
-- **¿Por qué hay un servidor? ¿No bastaba JavaScript?** El navegador no puede hablar de forma segura con PostgreSQL ni guardar claves; el servidor es el intermediario que valida permisos y ejecuta el SQL.
-- **¿Qué es una API REST?** Un conjunto de URLs (`/api/empleos`) y métodos HTTP (GET leer, POST crear, PATCH modificar, DELETE borrar) que el navegador llama con `fetch` y que responden en JSON.
-- **¿Qué es bcrypt?** Convierte la clave en un hash de un solo sentido; al entrar se compara el hash, no la clave.
-- **¿Qué es la inyección SQL y cómo se evita?** Meter SQL malicioso en un campo. Se evita usando consultas parametrizadas (`$1`) en vez de concatenar texto.
-- **¿Cómo se mantiene la sesión?** Cookie firmada con el id del usuario; el servidor la verifica en cada petición.
-- **¿Por qué validar en el navegador Y en el servidor?** El navegador mejora la experiencia; el servidor es el que garantiza que nadie se salte las reglas.
-- **¿Para qué `esc()`?** Convierte `< > "` en texto seguro y evita XSS (inyección de HTML/JS).
-- **¿Qué hace `UNIQUE (job_id, user_id)`?** La base misma impide postularse dos veces a la misma vacante.
-- **¿Qué es `ON DELETE CASCADE`?** Si se borra una vacante, se borran sus postulaciones.
-
-## Limitaciones actuales (siguientes pasos)
-Los PDF de registro de empresa se guardan en `server/private-documents/` y no se publican como archivos estáticos; solo los puede abrir la empresa propietaria y el administrador. La carpeta se excluye de Git. Los CV todavía guardan el nombre indicado por el candidato; no hay envío real de correos para las alertas. Antes de desplegar: cambia `SECRET`, usa HTTPS, limita intentos de login y considera almacenamiento de documentos externo.
-
-## Entrega y exposición
-
-- `docs/PRUEBAS_FUNCIONALES_INTEGRACION.md`: casos listos para ejecutar y completar con resultados reales.
-- `docs/GUION_VIDEO_USUARIO.md`: recorrido sugerido para grabar el manual en video.
-- `docs/INTEGRANTES.md`: plantilla para completar con los nombres del grupo.
-- `docs/GIT_Y_EXPOSICION.md`: pasos para repositorio, commits individuales y recorrido de sustentación.
-
-El detalle administrativo de empresa está en `#/empresas` → **Ver detalle**. Muestra datos legales, representante, estado, el PDF privado y la actividad de vacantes.
