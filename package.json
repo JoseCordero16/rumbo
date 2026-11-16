@@ -1,0 +1,20 @@
+{
+  "name": "rumbo-portal-trabajo",
+  "version": "1.0.0",
+  "description": "Portal de trabajo: Express + PostgreSQL + Bootstrap",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "db:init": "node server/init.js",
+    "db:seed-demo": "node server/seed.js",
+    "db:stress": "node server/stress.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-session": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  }
+}

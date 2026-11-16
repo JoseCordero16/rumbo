@@ -1,0 +1,68 @@
+/* Identidad visual de rumbo: sobreescribimos las variables de Bootstrap en vez de reescribir sus estilos */
+:root {
+  --bs-body-bg: #f6f1e6;           /* fondo crema */
+  --bs-body-color: #171714;        /* tinta */
+  --bs-body-font-family: 'Space Grotesk', system-ui, sans-serif;
+  --bs-border-radius: .6rem;
+  --acento: #ff5c33;
+}
+.card { border: 2px solid #171714; border-radius: 18px; }          /* bordes gruesos */
+.shadow-hard { box-shadow: 6px 6px 0 #171714; }                    /* sombra plana */
+.btn { border: 2px solid #171714; border-radius: 99px; font-weight: 700; }
+.btn-primary { --bs-btn-bg: var(--acento); --bs-btn-color: #171714; --bs-btn-hover-bg: #e84a22;
+               --bs-btn-hover-color: #171714; --bs-btn-hover-border-color: #171714; --bs-btn-border-color: #171714;
+               --bs-btn-active-bg: #d63f1a; --bs-btn-active-color: #171714; }
+.form-control, .form-select { border: 1.5px solid #171714; background: var(--bs-body-bg); }
+.logo { background: #171714; color: #fff !important; padding: 0 .7rem; border-radius: 8px; font-weight: 700; }
+.logo span { color: var(--acento); }
+.logo-box { width: 48px; height: 48px; border: 2px solid #171714; border-radius: 12px; background: #f7e34d;
+            display: grid; place-items: center; font-weight: 700; font-size: 1.3rem; flex: none; }
+.progress { border: 1.5px solid #171714; height: 12px; background: var(--bs-body-bg); }
+.progress-bar { background: var(--acento); }
+
+/* Acabado visual: conserva el crema y el coral de rumbo con menos peso visual. */
+:root {
+  --bs-body-bg: #f7f7f4;
+  --bs-body-color: #20221f;
+  --bs-border-color: #e4e5df;
+  --acento: #ed5b3a;
+  --bs-primary: #ed5b3a;
+  --bs-primary-rgb: 237, 91, 58;
+  --bs-border-radius: .8rem;
+  --bs-border-radius-lg: 1rem;
+}
+body { background: #f7f7f4; line-height: 1.55; }
+.navbar { box-shadow: 0 1px 10px #1d271009; border-color: #e6e7e2 !important; }
+.navbar .nav-link { font-weight: 600; color: #555b55; padding-inline: .8rem; }
+.navbar .nav-link:hover, .navbar .nav-link:focus { color: var(--acento); }
+.card { border: 1px solid #e5e6e0; border-radius: 16px; box-shadow: 0 8px 24px #1d27100a; }
+.shadow-hard { box-shadow: 0 12px 30px #1d27100c; }
+.btn { border-width: 1px; border-radius: 10px; font-weight: 650; padding: .55rem .9rem; transition: transform .15s ease, box-shadow .15s ease; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px #20221f18; }
+.btn-sm { border-radius: 8px; padding: .38rem .65rem; }
+.btn-primary { --bs-btn-bg: var(--acento); --bs-btn-color: white; --bs-btn-border-color: var(--acento); --bs-btn-hover-bg: #d84d30; --bs-btn-hover-color: white; --bs-btn-hover-border-color: #d84d30; --bs-btn-active-bg: #ca462c; }
+.form-control, .form-select { background-color: #fff; border-color: #dfe1da; border-radius: 10px; padding: .65rem .8rem; }
+.form-control:focus, .form-select:focus { border-color: #ed8b75; box-shadow: 0 0 0 .22rem #ed5b3a20; }
+.list-group { border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px #1d27100a; }
+.list-group-item { border-color: #ecece7; padding: .8rem 1rem; font-weight: 600; }
+.list-group-item.active { background: #fff1ed; color: #bb452e; border-color: #f3c5b9; }
+.table-responsive { overflow-x: auto; }
+.table { --bs-table-bg: transparent; }
+.table thead th { background: #f5f6f2; color: #656b63; font-size: .76rem; text-transform: uppercase; letter-spacing: .045em; white-space: nowrap; border-bottom-color: #e5e6e0; }
+.table td { padding-block: .85rem; border-color: #eff0eb; }
+.badge { border-radius: 999px; padding: .45em .72em; font-weight: 650; }
+.logo { background: #20221f; padding: .25rem .65rem; border-radius: 9px; }
+.logo-box { border: 0; border-radius: 14px; background: #fff0e9; color: #bd4c32; }
+.progress { border: 0; border-radius: 99px; background: #e9ebe5; }
+.progress-bar { border-radius: 99px; background: var(--acento); }
+.eyebrow { color: #ad4e39; font-size: .72rem; font-weight: 750; letter-spacing: .12em; }
+footer { color: #777d75 !important; }
+footer a { color: #656b63; text-decoration: none; }
+footer a:hover { color: var(--acento); }
+@media (max-width: 767.98px) {
+  main.container { padding-top: 1rem !important; }
+  .display-4 { font-size: 2.35rem; }
+  .table { min-width: 680px; }
+  .list-group { display: flex; flex-direction: row; overflow-x: auto; margin-bottom: 1rem; }
+  .list-group-item { flex: 0 0 auto; }
+}
